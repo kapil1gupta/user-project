@@ -21,39 +21,39 @@ exports.addUser = function(req,callback){
         var count = res.seq
         count = count + 1
     
-        db.collection('counters').updateOne({'_id':'user_id'},{'seq': count},function(err,res){
+        db.collection('counters').updateOne({'_id':'user_id'},{'seq': count},function(err,res1){
           if(err)
           {
             throw err
           }
           else {
-            
+            var schema = {
+              userId : count,
+              userName : req.body.userName,
+              firstName : req.body.firstName,
+              lastName :  req.body.lastName,
+              email : req.body.email,
+              phoneNumber : req.body.phoneNumber,
+              password : md5(req.body.password)
+            }
+
+              db.collection('user').insertOne(schema,function(err,res2){
+       if(err)
+      {
+        throw err
+      }
+      else {
+         var resJson = {
+           http_code: 200,
+           message: 'sucessfully inserted'
+         }
+           return callback(false,resJson)
+       }
+    });
           }
         });
 
-        var schema = {
-                  userId : count,
-                  userName : req.body.userName,
-                  firstName : req.body.firstName,
-                  lastName :  req.body.lastName,
-                  email : req.body.email,
-                  phoneNumber : req.body.phoneNumber,
-                  password : md5(req.body.password)
-                }
-
-        db.collection('user').insertOne(schema,function(err,res){
-          if(err)
-          {
-            throw err
-          }
-          else {
-             var resJson = {
-               http_code: 200,
-               message: 'sucessfully inserted'
-             }
-               return callback(false,resJson)
-           }
-        });
+       
       });
   }
 });
