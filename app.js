@@ -16,7 +16,7 @@ app.use(function (req, res, next) {
 	next();
 });
 
-var k = 200;
+var k = 100;
 app.use('/',index);
 app.use('/user',user)
 //Listening port
